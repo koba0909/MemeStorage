@@ -11,7 +11,8 @@ import com.bumptech.glide.Glide
 import com.koba.memestorage.R
 import com.koba.memestorage.data.MediaItem
 
-class GalleryAdapter: ListAdapter<MediaItem, GalleryAdapter.GalleryViewHolder>(MediaItemDiffCallback()){
+class GalleryAdapter :
+    ListAdapter<MediaItem, GalleryAdapter.GalleryViewHolder>(MediaItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater.inflate(R.layout.gallery_layout, parent, false)
@@ -27,7 +28,7 @@ class GalleryAdapter: ListAdapter<MediaItem, GalleryAdapter.GalleryViewHolder>(M
             .into(holder.ivThumbnail)
     }
 
-    inner class GalleryViewHolder(view: View) : RecyclerView.ViewHolder(view){
+    inner class GalleryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var ivThumbnail: ImageView = view.findViewById(R.id.iv_thumbnail)
     }
 

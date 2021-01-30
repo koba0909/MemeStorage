@@ -35,9 +35,10 @@ class GalleryFragment : Fragment() {
 
     private fun initLiveDataObserve() {
         with(viewModel) {
-            imagesLiveData.observe(this@GalleryFragment.viewLifecycleOwner, Observer {
-                galleryAdapter.submitList(it)
-            })
+            imagesLiveData.observe(
+                this@GalleryFragment.viewLifecycleOwner,
+                Observer { galleryAdapter.submitList(it) }
+            )
         }
     }
 

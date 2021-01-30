@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit
 
 
 class MediaRepository {
-    suspend fun fetchSavedImages(contentResolver: ContentResolver): List<MediaItem>{
+    suspend fun fetchSavedImages(contentResolver: ContentResolver): List<MediaItem> {
         val images = mutableListOf<MediaItem>()
 
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             val projections = arrayOf(
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -37,14 +37,17 @@ class MediaRepository {
                 selection,
                 selectionArgs,
                 sortOrder
-            )?.use {cursor ->
+            )?.use { cursor ->
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val dateModifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED)
-                val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                val dateModifiedColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED)
+                val displayNameColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
 
-                while(cursor.moveToNext()){
+                while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
-                    val dateModified = Date(TimeUnit.SECONDS.toMillis(cursor.getLong(dateModifiedColumn)))
+                    val dateModified =
+                        Date(TimeUnit.SECONDS.toMillis(cursor.getLong(dateModifiedColumn)))
                     val displayName = cursor.getString(displayNameColumn)
 
                     val contentUri = ContentUris.withAppendedId(
