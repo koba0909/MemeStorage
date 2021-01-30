@@ -24,7 +24,6 @@ class GalleryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = GalleryFragmentBinding.inflate(inflater, container, false)
-        initViewModel()
         initView()
         return binding.root
     }
@@ -41,12 +40,6 @@ class GalleryFragment : Fragment() {
                     )
                 }
             }
-        }
-    }
-
-    private fun initViewModel() {
-        activity?.application?.let {
-            viewModel.application = it
         }
     }
 
