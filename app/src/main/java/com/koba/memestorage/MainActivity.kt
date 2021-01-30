@@ -2,8 +2,7 @@ package com.koba.memestorage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.koba.memestorage.ui.main.MainFragment
-import com.koba.memestorage.ui.main.MainViewModel
+import com.koba.memestorage.ui.gallery.GalleryFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -13,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, GalleryFragment.newInstance())
                     .commitNow()
         }
     }

@@ -1,7 +1,17 @@
-package com.koba.memestorage.ui.main
+package com.koba.memestorage.ui.gallery
 
-import androidx.hilt.lifecycle.ViewModelInject
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.koba.memestorage.data.GalleryItem
+import com.koba.memestorage.repo.GalleryRepository
 
-class MainViewModel @ViewModelInject constructor(): ViewModel() {
+class GalleryViewModel : ViewModel() {
+
+    private val galleryRepository by lazy { GalleryRepository() }
+    lateinit var application : Application
+
+    fun loadImages() : List<GalleryItem>{
+        return galleryRepository.fetchSavedImages(application.contentResolver)
+    }
+
 }
