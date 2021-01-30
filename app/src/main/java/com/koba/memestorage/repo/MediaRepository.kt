@@ -4,15 +4,15 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.provider.MediaStore
-import com.koba.memestorage.data.GalleryItem
+import com.koba.memestorage.data.MediaItem
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class GalleryRepository {
-    fun fetchSavedImages(contentResolver: ContentResolver): List<GalleryItem>{
-        val images = mutableListOf<GalleryItem>()
+class MediaRepository {
+    fun fetchSavedImages(contentResolver: ContentResolver): List<MediaItem>{
+        val images = mutableListOf<MediaItem>()
         val projections = arrayOf(
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -48,7 +48,7 @@ class GalleryRepository {
                         id
                 )
 
-                val image = GalleryItem(
+                val image = MediaItem(
                         id,
                         displayName,
                         dateModified,

@@ -1,13 +1,11 @@
 package com.koba.memestorage.ui.gallery
 
-import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import com.koba.memestorage.const.Const
 import com.koba.memestorage.databinding.GalleryFragmentBinding
