@@ -14,7 +14,7 @@ import com.koba.memestorage.data.MediaItem
 class GalleryAdapter: ListAdapter<MediaItem, GalleryAdapter.GalleryViewHolder>(MediaItemDiffCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.gallery_layout, parent)
+        val view = layoutInflater.inflate(R.layout.gallery_layout, parent, false)
         return GalleryViewHolder(view)
     }
 

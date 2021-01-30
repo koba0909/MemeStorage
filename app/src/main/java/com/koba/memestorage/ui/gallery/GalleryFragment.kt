@@ -1,12 +1,12 @@
 package com.koba.memestorage.ui.gallery
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.koba.memestorage.const.Const
 import com.koba.memestorage.databinding.GalleryFragmentBinding
@@ -22,11 +22,23 @@ class GalleryFragment : Fragment() {
 
     private val galleryAdapter by lazy { GalleryAdapter() }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = GalleryFragmentBinding.inflate(inflater, container, false)
         initView()
+        initLiveDataObserve()
+        checkPermissionLoadImages()
         return binding.root
+    }
+
+    private fun initLiveDataObserve() {
+        with(viewModel) {
+            imagesLiveData.observe(this@GalleryFragment.viewLifecycleOwner, Observer {
+                galleryAdapter.submitList(it)
+            })
+        }
     }
 
     private fun initView() {
@@ -38,16 +50,6 @@ class GalleryFragment : Fragment() {
                 )
                 adapter = galleryAdapter
             }
-//            tvLoadImages.setOnClickListener {
-//                if(PermissionUtils.haveStoragePermission(requireContext())){
-//                    loadImages()
-//                }else{
-//                    PermissionUtils.requestMediaPermission(
-//                        this@GalleryFragment,
-//                        Const.RequestCode.LOAD_IMAGE
-//                    )
-//                }
-//            }
         }
     }
 
@@ -56,17 +58,23 @@ class GalleryFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        when(requestCode){
+        when (requestCode) {
             Const.RequestCode.LOAD_IMAGE -> {
-                loadImages()
+                viewModel.loadImages()
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun loadImages(){
-        val images = viewModel.loadImages()
-        Log.d(TAG, "이미지 갯수 : ${images.size}")
+    private fun checkPermissionLoadImages() {
+        if (PermissionUtils.haveStoragePermission(requireContext())) {
+            viewModel.loadImages()
+        } else {
+            PermissionUtils.requestMediaPermission(
+                this@GalleryFragment,
+                Const.RequestCode.LOAD_IMAGE
+            )
+        }
     }
 
     companion object {
