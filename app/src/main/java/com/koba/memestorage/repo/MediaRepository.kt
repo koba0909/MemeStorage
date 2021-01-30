@@ -5,58 +5,64 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.provider.MediaStore
 import com.koba.memestorage.data.MediaItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class MediaRepository {
-    fun fetchSavedImages(contentResolver: ContentResolver): List<MediaItem>{
+    suspend fun fetchSavedImages(contentResolver: ContentResolver): List<MediaItem>{
         val images = mutableListOf<MediaItem>()
-        val projections = arrayOf(
+
+        withContext(Dispatchers.IO){
+            val projections = arrayOf(
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED
-        )
-        
-        val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
-        
-        val selectionArgs = arrayOf(
+            )
+
+            val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
+
+            val selectionArgs = arrayOf(
                 dateToTimeStamp(day = 30, month = 1, year = 2021).toString()
-        )
+            )
 
-        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+            val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
-        contentResolver.query(
+            contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projections,
                 selection,
                 selectionArgs,
                 sortOrder
-        )?.use {cursor ->
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            val dateModifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED)
-            val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            )?.use {cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                val dateModifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED)
+                val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
 
-            while(cursor.moveToNext()){
-                val id = cursor.getLong(idColumn)
-                val dateModified = Date(TimeUnit.SECONDS.toMillis(cursor.getLong(dateModifiedColumn)))
-                val displayName = cursor.getString(displayNameColumn)
+                while(cursor.moveToNext()){
+                    val id = cursor.getLong(idColumn)
+                    val dateModified = Date(TimeUnit.SECONDS.toMillis(cursor.getLong(dateModifiedColumn)))
+                    val displayName = cursor.getString(displayNameColumn)
 
-                val contentUri = ContentUris.withAppendedId(
+                    val contentUri = ContentUris.withAppendedId(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id
-                )
+                    )
 
-                val image = MediaItem(
+                    val image = MediaItem(
                         id,
                         displayName,
                         dateModified,
                         contentUri
-                )
-                images += image
+                    )
+                    images += image
+                }
             }
         }
+
         return images
     }
 
