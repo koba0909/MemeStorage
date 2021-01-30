@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.koba.memestorage.const.Const
 import com.koba.memestorage.databinding.GalleryFragmentBinding
 import com.koba.memestorage.util.PermissionUtils
@@ -19,6 +20,8 @@ class GalleryFragment : Fragment() {
     private var _binding: GalleryFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private val galleryAdapter by lazy { GalleryAdapter() }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = GalleryFragmentBinding.inflate(inflater, container, false)
@@ -28,16 +31,23 @@ class GalleryFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            tvLoadImages.setOnClickListener {
-                if(PermissionUtils.haveStoragePermission(requireContext())){
-                    loadImages()
-                }else{
-                    PermissionUtils.requestMediaPermission(
-                        this@GalleryFragment,
-                        Const.RequestCode.LOAD_IMAGE
-                    )
-                }
+            rvGallery.apply {
+                layoutManager = GridLayoutManager(
+                    this@GalleryFragment.requireContext(),
+                    2
+                )
+                adapter = galleryAdapter
             }
+//            tvLoadImages.setOnClickListener {
+//                if(PermissionUtils.haveStoragePermission(requireContext())){
+//                    loadImages()
+//                }else{
+//                    PermissionUtils.requestMediaPermission(
+//                        this@GalleryFragment,
+//                        Const.RequestCode.LOAD_IMAGE
+//                    )
+//                }
+//            }
         }
     }
 
